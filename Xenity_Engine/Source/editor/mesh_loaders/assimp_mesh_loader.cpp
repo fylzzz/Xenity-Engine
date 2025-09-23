@@ -64,6 +64,44 @@ bool AssimpMeshLoader::LoadMesh(MeshData& mesh, const LoadingOptions& options)
 			return false;
 		}
 
+		if (scene->HasAnimations())
+		{
+			for (unsigned int animIndex = 0; animIndex < scene->mNumAnimations; animIndex++)
+			{
+				const aiAnimation* anim = scene->mAnimations[animIndex];
+				MeshData::AnimationClip clip;
+				clip.name = anim->mName.C_Str();
+				clip.duration = anim->mDuration;
+				clip.ticksPerSecond = anim->mTicksPerSecond != 0 ? anim->mTicksPerSecond : 25.0;
+
+				for (unsigned int channelIndex = 0; channelIndex < anim->mNumChannels; channelIndex++)
+				{
+					const aiNodeAnim* channel = anim->mChannels[channelIndex];
+					MeshData::BoneAnimation boneAnim;
+					boneAnim.boneName = channel->mNodeName.C_Str();
+
+					// Position keys
+					for (unsigned int i = 0; i < channel->mNumPositionKeys; i++)
+					{
+						MeshData::AnimationKey key;
+						key.time = channel->mPositionKeys[i].mTime;
+						key.position = channel->mPositionKeys[i].mValue;
+						if (i < channel->mNumRotationKeys)
+						{
+							key.rotation = channel->mRotationKeys[i].mValue;
+						}
+						if (i < channel->mNumScalingKeys)
+						{
+							key.scale = channel->mScalingKeys[i].mValue;
+						}
+						boneAnim.keys.push_back(key);
+					}
+					clip.channels.push_back(boneAnim);
+				}
+				mesh.m_animations.push_back(clip);
+			}
+		}
+
 		// Put assimp submesh data in the engine mesh
 		for (size_t subMeshIndex = 0; subMeshIndex < scene->mNumMeshes; subMeshIndex++)
 		{

@@ -1,3 +1,54 @@
+// mesh_data.h (pseudo extension)
+#include <unordered_map>
+#include <string>
+#include <vector>
+#include <assimp/matrix4x4.h>
+#include <assimp/quaternion.h>
+#include <assimp/vector3.h>
+
+// Bone and animation support structures
+struct BoneInfo
+{
+	aiMatrix4x4 offsetMatrix; // from mesh space to bone space
+};
+
+struct VertexWeight
+{
+	uint32_t boneID;
+	float weight;
+};
+
+struct AnimationKey
+{
+	double time;
+	aiVector3D position;
+	aiQuaternion rotation;
+	aiVector3D scale;
+};
+
+struct BoneAnimation
+{
+	std::string boneName;
+	std::vector<AnimationKey> keys;
+};
+
+struct AnimationClip
+{
+	std::string name;
+	double duration;
+	double ticksPerSecond;
+	std::vector<BoneAnimation> channels;
+};
+
+// Extend MeshData with animation containers
+// (This does not replace the original MeshData below, it supplements it.)
+class MeshDataAnimationExtension
+{
+public:
+	std::unordered_map<std::string, BoneInfo> m_boneInfo;
+	std::vector<AnimationClip> m_animations;
+};
+
 // SPDX-License-Identifier: MIT
 //
 // Copyright (c) 2022-2025 Gregory Machefer (Fewnity)
