@@ -177,6 +177,23 @@ void MeshData::SubMesh::SetColor(const Color& color, uint32_t vertexIndex)
 	}
 }
 
+void MeshData::SubMesh::InitBoneWeights(uint32_t vertexCount)
+{
+	m_vertexWeights.resize(vertexCount);
+}
+
+void MeshData::SubMesh::AddBoneWeight(uint32_t vertexIndex, uint32_t boneIndex, float weight)
+{
+	if (vertexIndex >= m_vertexWeights.size())
+		return;
+
+	VertexWeight vw;
+	vw.boneID = boneIndex;
+	vw.weight = weight;
+
+	m_vertexWeights[vertexIndex].push_back(vw);
+}
+
 void MeshData::SendDataToGpu()
 {
 	Engine::GetRenderer().UploadMeshData(*this);

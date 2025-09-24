@@ -6,48 +6,7 @@
 #include <assimp/quaternion.h>
 #include <assimp/vector3.h>
 
-// Bone and animation support structures
-struct BoneInfo
-{
-	aiMatrix4x4 offsetMatrix; // from mesh space to bone space
-};
 
-struct VertexWeight
-{
-	uint32_t boneID;
-	float weight;
-};
-
-struct AnimationKey
-{
-	double time;
-	aiVector3D position;
-	aiQuaternion rotation;
-	aiVector3D scale;
-};
-
-struct BoneAnimation
-{
-	std::string boneName;
-	std::vector<AnimationKey> keys;
-};
-
-struct AnimationClip
-{
-	std::string name;
-	double duration;
-	double ticksPerSecond;
-	std::vector<BoneAnimation> channels;
-};
-
-// Extend MeshData with animation containers
-// (This does not replace the original MeshData below, it supplements it.)
-class MeshDataAnimationExtension
-{
-public:
-	std::unordered_map<std::string, BoneInfo> m_boneInfo;
-	std::vector<AnimationClip> m_animations;
-};
 
 // SPDX-License-Identifier: MIT
 //
@@ -78,6 +37,45 @@ public:
 class API MeshData : public FileReference
 {
 public:
+
+	// Bone and animation support structures
+	struct BoneInfo
+	{
+		aiMatrix4x4 offsetMatrix; // from mesh space to bone space
+	};
+
+	struct VertexWeight
+	{
+		uint32_t boneID;
+		float weight;
+	};
+
+	struct AnimationKey
+	{
+		double time;
+		aiVector3D position;
+		aiQuaternion rotation;
+		aiVector3D scale;
+	};
+
+	struct BoneAnimation
+	{
+		std::string boneName;
+		std::vector<AnimationKey> keys;
+	};
+
+	struct AnimationClip
+	{
+		std::string name;
+		double duration;
+		double ticksPerSecond;
+		std::vector<BoneAnimation> channels;
+	};
+
+	std::unordered_map<std::string, BoneInfo> m_boneInfo;
+	std::vector<AnimationClip> m_animations;
+	
+
 	class API SubMesh
 	{
 	public:
@@ -191,6 +189,10 @@ public:
 			}
 		}
 
+		void InitBoneWeights(uint32_t vertexCount);
+
+		void AddBoneWeight(uint32_t vertexIndex, uint32_t boneIndex, float weight);
+
 		/**
 		* @brief Get indices data pointer
 		*/
@@ -201,6 +203,7 @@ public:
 
 	private:
 		void * m_indices = nullptr;
+		std::vector<std::vector<VertexWeight>> m_vertexWeights;
 	public:
 		MeshData* m_meshData = nullptr;
 		// On PSP, we have to respect a specific order for the data
