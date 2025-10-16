@@ -85,7 +85,7 @@ bool AssimpMeshLoader::LoadMesh(MeshData& mesh, const LoadingOptions& options)
 					const aiBone* aiBone = assimpMesh->mBones[boneIndex];
 					std::string boneName(aiBone->mName.C_Str());
 
-
+					Debug::Print(boneName);
 				}
 			}
 
