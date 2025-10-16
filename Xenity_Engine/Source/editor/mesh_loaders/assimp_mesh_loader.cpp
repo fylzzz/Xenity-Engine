@@ -35,6 +35,7 @@ bool AssimpMeshLoader::LoadMesh(MeshData& mesh, const LoadingOptions& options)
 {
 	STACK_DEBUG_OBJECT(STACK_HIGH_PRIORITY);
 
+	//check if valid files are provided
 	XASSERT(mesh.m_file, "[AssimpMeshLoader::LoadMesh] File is null");
 	XASSERT(!mesh.m_file->GetPath().empty(), "[AssimpMeshLoader::LoadMesh] File path is empty");
 
@@ -72,10 +73,20 @@ bool AssimpMeshLoader::LoadMesh(MeshData& mesh, const LoadingOptions& options)
 			const bool hasNormals = assimpMesh->HasNormals();
 			const bool hasUVs = assimpMesh->HasTextureCoords(0);
 			const bool hasFaces = assimpMesh->HasFaces();
+			const bool hasBones = assimpMesh->HasBones();
 			bool hasColors = assimpMesh->HasVertexColors(0);
 			if (options.forceColors)
 			{
 				hasColors = true;
+			}
+
+			if (hasBones) {
+				for (size_t boneIndex = 0; boneIndex < assimpMesh->mNumBones; boneIndex++) {
+					const aiBone* aiBone = assimpMesh->mBones[boneIndex];
+					std::string boneName(aiBone->mName.C_Str());
+
+
+				}
 			}
 
 			size_t verticesPerFace = 0;
