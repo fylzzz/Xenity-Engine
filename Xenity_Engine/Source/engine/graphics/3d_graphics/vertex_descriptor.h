@@ -18,8 +18,14 @@ enum class VertexElement : uint32_t // Do not change the uint32_t type
 	UV_32_BITS = 1 << 6,
 	UV_16_BITS = 1 << 7, // Used for PSP
 	UV_8_BITS = 1 << 8, // Used for PSP
-	COLOR_4_FLOATS = 1 << 9,
-	COLOR_32_BITS_UINT = 1 << 10, // Used for PSP
+	BONEID_32_BITS = 1 << 9,
+	BONEID_16_BITS = 1 << 10,
+	BONEID_8_BITS = 1 << 11,
+	BONEWEIGHT_32_BITS = 1 << 12,
+	BONEWEIGHT_16_BITS = 1 << 13,
+	BONEWEIGHT_8_BITS = 1 << 14,
+	COLOR_4_FLOATS = 1 << 15,
+	COLOR_32_BITS_UINT = 1 << 16, // Used for PSP
 };
 
 constexpr VertexElement operator|(VertexElement lhs, VertexElement rhs)
