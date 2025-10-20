@@ -117,6 +117,11 @@ bool AssimpMeshLoader::LoadMesh(MeshData& mesh, const LoadingOptions& options)
 			{
 				vertexDescriptorList.AddVertexElement(VertexElement::NORMAL_32_BITS);
 			}
+			if (hasBones)
+			{
+				vertexDescriptorList.AddVertexElement(VertexElement::BONEID_32_BITS);
+				vertexDescriptorList.AddVertexElement(VertexElement::BONEWEIGHT_32_BITS);
+			}
 			vertexDescriptorList.AddVertexElement(VertexElement::POSITION_32_BITS);
 
 			// PSP for example prefer triangles only for performance
