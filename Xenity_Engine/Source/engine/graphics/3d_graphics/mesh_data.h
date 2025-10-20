@@ -148,6 +148,19 @@ public:
 			return m_indices;
 		}
 
+		void AddBoneWeight(uint32_t vertexID, size_t boneIndex, float w)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				if (m_boneWeights[vertexID][i] == 0.0f)
+				{
+					m_boneIDs[vertexID][i] = boneIndex;
+					m_boneWeights[vertexID][i] = w;
+					return;
+				}
+			}
+		}
+
 	private:
 		void * m_indices = nullptr;
 	public:
@@ -162,6 +175,9 @@ public:
 		uint32_t m_indexMemSize = 0;
 		uint32_t m_index_count = 0;
 		uint32_t m_vertice_count = 0;
+
+		uint32_t * m_boneIDs = nullptr;
+		float * m_boneWeights = nullptr;
 
 #if defined(_EE)
 		VECTOR *c_verts = nullptr;
@@ -190,6 +206,7 @@ public:
 #endif
 		bool usesShortIndices = true;
 		bool m_isQuad = false;
+
 	};
 
 	MeshData() = default;
