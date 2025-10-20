@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <memory>
+#include <array>
 
 #if defined(_EE)
 #include <draw3d.h>
@@ -150,12 +151,17 @@ public:
 
 		void AddBoneWeight(uint32_t vertexID, size_t boneIndex, float w)
 		{
+			XASSERT(vertexID < m_vertice_count, "Invalid vertex ID in AddBoneWeight");
+
+			auto& ids = m_boneIDs[vertexID];
+			auto& weights = m_boneWeights[vertexID];
+
 			for (int i = 0; i < 4; ++i)
 			{
-				if (m_boneWeights[vertexID][i] == 0.0f)
+				if (weights[i] == 0.0f)
 				{
-					m_boneIDs[vertexID][i] = boneIndex;
-					m_boneWeights[vertexID][i] = w;
+					ids[i] = boneIndex;
+					weights[i] = w;
 					return;
 				}
 			}
@@ -176,8 +182,8 @@ public:
 		uint32_t m_index_count = 0;
 		uint32_t m_vertice_count = 0;
 
-		uint32_t * m_boneIDs = nullptr;
-		float * m_boneWeights = nullptr;
+		std::vector<std::array<uint32_t, 4>> m_boneIDs;
+		std::vector<std::array<float, 4>> m_boneWeights;
 
 #if defined(_EE)
 		VECTOR *c_verts = nullptr;
