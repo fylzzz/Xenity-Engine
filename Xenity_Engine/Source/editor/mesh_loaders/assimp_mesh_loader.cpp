@@ -85,7 +85,16 @@ bool AssimpMeshLoader::LoadMesh(MeshData& mesh, const LoadingOptions& options)
 					const aiBone* aiBone = assimpMesh->mBones[boneIndex];
 					std::string boneName(aiBone->mName.C_Str());
 
-					Debug::Print(boneName);
+					//Debug::Print(boneName);
+
+					for (size_t weightIndex = 0; weightIndex < aiBone->mNumWeights; weightIndex++)
+					{
+						const aiVertexWeight& weight = aiBone->mWeights[weightIndex];
+						uint32_t vertexID = weight.mVertexId;
+						float w = weight.mWeight;
+
+						mesh.m_subMeshes[subMeshIndex]->AddBoneWeight(vertexID, boneIndex, w);
+					}
 				}
 			}
 
