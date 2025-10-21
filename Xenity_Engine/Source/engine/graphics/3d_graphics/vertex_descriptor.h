@@ -239,6 +239,11 @@ struct VertexDescriptor
 		return m_colorIndex;
 	}
 
+	[[nodiscard]] uint32_t GetBoneIndex() const
+	{
+		return m_boneIndex;
+	}
+
 	/**
 	* @brief Get the offset in memory of the position vertex element
 	*/
@@ -301,5 +306,6 @@ private:
 	int32_t m_normalIndex = -1;
 	int32_t m_uvIndex = -1;
 	int32_t m_colorIndex = -1;
+	int32_t m_boneIndex = -1;
 	uint16_t m_vertexSize = 0;
 };

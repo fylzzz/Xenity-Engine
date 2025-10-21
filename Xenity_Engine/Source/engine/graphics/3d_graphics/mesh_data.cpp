@@ -376,6 +376,7 @@ void MeshData::CreateSubMesh(uint32_t vcount, uint32_t index_count, const Vertex
 	std::unique_ptr<MeshData::SubMesh> newSubMesh = std::make_unique<MeshData::SubMesh>();
 	newSubMesh->m_vertexDescriptor = vertexDescriptorList;
 	newSubMesh->m_meshData = this;
+
 	if (index_count >= std::numeric_limits<unsigned short>::max())
 	{
 		newSubMesh->usesShortIndices = false;
